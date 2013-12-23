@@ -1,0 +1,12 @@
+package a7;
+
+import jade.core.Agent;
+import jade.core.behaviours.*;
+public class Agent1 extends Agent 
+    {
+        protected void setup() 
+        {
+            addBehaviour( new Looper( this, 300 ) );
+            addBehaviour( new Looper( this, 500 ) );
+        }
+    }

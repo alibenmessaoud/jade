@@ -1,0 +1,8 @@
+package a1;
+
+import jade.core.Agent;
+
+
+public class agent extends Agent {
+	
+}

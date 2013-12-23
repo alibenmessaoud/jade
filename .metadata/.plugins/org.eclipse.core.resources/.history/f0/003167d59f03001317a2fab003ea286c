@@ -1,0 +1,87 @@
+import java.io.IOException;
+
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.OperationHistoryFactory ;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.actions.ActionDelegate;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
+import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
+
+/**
+* This class provides the hooks between the analyze/transformation/PISA engines and the EMF code.
+* @author rladan
+*/
+public class MetaEditor extends ActionDelegate implements IObjectActionDelegate {
+
+/**
+* @see ActionDelegate
+*/
+public MetaEditor() {
+super();
+}
+/** This contains the current selection of the editor. */
+private EObject sel;
+
+private TransactionalEditingDomain editingDomain = WorkspaceEditingDomainFactory.INSTANCE.createEditingDomain() ;
+
+private Variator var = new Variator();
+
+/**
+* @see IActionDelegate#run(IAction)
+*/
+@Override
+public void run(IAction action) {
+// Find out what is selected. Note that child nodes are *not*
+// automatically selected when their parents are selected.
+final AbstractEMFOperation aeo = new AbstractEMFOperation(this.editingDomain, "domain") {
+@Override
+protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) {
+try {
+MetaEditor.this.var.doVariate(MetaEditor.this.sel);
+} catch (IOException ioe) {
+ioe.printStackTrace();
+}
+return null;
+}
+};
+try {
+OperationHistoryFactory.getOperationHistory().execute(aeo, null, null);
+} catch (final ExecutionException ee) {
+ee.printStackTrace();
+}
+}
+
+/**
+* <!--begin-user-doc-->
+* method from org.eclipse.emf.ecore.action.CreateDynamicInstanceAction.jav a via post from Ed Merks
+* <!--end-user-doc-->
+* @see IActionDelegate#selectionChanged(IAction, ISelection)
+*/
+@Override
+public void selectionChanged(IAction action, ISelection selection) {
+//activated by selecting "Analyzed" from the pop-up menu
+if (selection instanceof IStructuredSelection) {
+action.setEnabled(true);
+this.sel = (EObject)((IStructuredSelection)selection).getFirstElement() ;
+} else {
+action.setEnabled(false);
+this.sel = null;
+}
+}
+
+@Override
+public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+// TODO Auto-generated method stub
+
+}
+}

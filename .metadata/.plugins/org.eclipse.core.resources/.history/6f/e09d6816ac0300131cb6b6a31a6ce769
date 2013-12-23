@@ -1,0 +1,12 @@
+package a1;
+
+import jade.core.*;
+
+
+public class agent extends Agent {
+	protected void setup()
+	{
+		AID id = new AID("ali", AID.ISLOCALNAME);
+		//System.out.println("_______________");		
+	}
+}

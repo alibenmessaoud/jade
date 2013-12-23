@@ -1,0 +1,11 @@
+package a1;
+
+import jade.core.*;
+
+
+public class agent extends Agent {
+	protected void setup()
+	{		
+		//System.out.println("_______________");		
+	}
+}

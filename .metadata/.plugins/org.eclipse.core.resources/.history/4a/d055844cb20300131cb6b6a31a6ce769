@@ -1,0 +1,46 @@
+ 
+import jade.core.AID;
+import jade.core.Agent;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+
+
+/**
+ * Initiate agents
+ * 
+ * @author Mattia Salnitri
+ *
+ */
+public class Initiator extends Agent 
+{
+
+	protected void setup()
+	{
+		//start agents
+		System.out.println("Start services");
+		createAgent("WFS1", "it.unitn.science.aose.salnitri.posWeatherForecast.WeatherForecastService");
+		createAgent("WFS2", "it.unitn.science.aose.salnitri.posWeatherForecast.WeatherForecastService");
+		createAgent("WFS3", "it.unitn.science.aose.salnitri.posWeatherForecast.WeatherForecastService");
+		createAgent("PositionService", "it.unitn.science.aose.salnitri.posWeatherForecast.PositionService");
+		createAgent("PosWeatherForecastService", "it.unitn.science.aose.salnitri.posWeatherForecast.PosWeatherForecastService");
+	}
+	
+	private void createAgent(String name, String agentType)
+	{
+		//retrieve the container controller
+    	AgentContainer c = getContainerController();
+    	try {
+    		//setup agent controller
+    		AgentController a = c.createNewAgent( name, agentType, null );
+    		//start agent
+    		a.start();
+    		System.out.println("Created: " + (new AID(name, AID.ISLOCALNAME)));
+    	}
+    	catch (Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+	}
+	
+
+}

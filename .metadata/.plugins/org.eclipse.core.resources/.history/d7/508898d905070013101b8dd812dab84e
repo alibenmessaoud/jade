@@ -1,0 +1,8 @@
+public class Agent1 extends Agent 
+    {
+        protected void setup() 
+        {
+            addBehaviour( new Looper( this, 300 ) );
+            addBehaviour( new Looper( this, 500 ) );
+        }
+    }

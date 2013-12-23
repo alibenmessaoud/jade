@@ -1,0 +1,121 @@
+package a6;
+import jade.core.AID;
+
+import jade.core.Agent;
+
+import jade.core.behaviours.*;
+
+import jade.lang.acl.*;
+
+
+
+public class User extends Agent {
+
+	
+
+	@Override	
+
+	protected void setup() {
+
+		String sourceLanguage;
+
+		String wordToTranslate;
+
+		
+
+		Object [] arg = getArguments();
+
+		
+
+		if (arg==null || arg.length!=2) {
+
+			System.out.println("I need exactly two arguments (lang and word)");
+
+			doDelete();
+
+		}
+
+		else {
+
+			sourceLanguage = arg[0].toString();
+
+			wordToTranslate = arg[1].toString();
+
+			if (!sourceLanguage.equals("ita") && !sourceLanguage.equals("eng")) {
+
+				System.out.println("Supported languages are only ita and eng.");
+
+				doDelete();
+
+			}
+
+			addBehaviour(new DoTranslate(sourceLanguage, wordToTranslate));
+
+		}
+
+		
+
+	}
+
+	
+
+	private class DoTranslate extends OneShotBehaviour {
+
+		String sourceLanguage;
+
+		String wordToTranslate;
+
+		public DoTranslate(String sourceLanguage, String wordToTranslate) {
+
+			this.sourceLanguage = sourceLanguage;
+
+			this.wordToTranslate = wordToTranslate;
+
+		}
+
+		
+
+		
+
+		@Override
+
+		public void action() {
+
+			ACLMessage msg1 = new ACLMessage(ACLMessage.REQUEST);
+
+			msg1.addReceiver(new AID("Translator", AID.ISLOCALNAME));
+
+			msg1.setLanguage(sourceLanguage);
+
+			msg1.setContent(wordToTranslate);
+
+			send(msg1);
+
+			ACLMessage msg2 = blockingReceive();
+
+			System.out.println("Received message: " + wordToTranslate + " in " + msg2.getLanguage() + " is " + msg2.getContent());			
+
+		}
+
+		
+
+		@Override
+
+		public int onEnd() {
+
+			doDelete();
+
+			return super.onEnd();
+
+		}
+
+	}
+
+}
+
+
+
+
+
+
+

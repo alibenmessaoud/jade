@@ -1,0 +1,12 @@
+package a8;
+
+import jade.core.Agent;
+
+public class BookBuyerAgent extends Agent {
+	protected
+void
+setup() {
+// Printout a welcome me ssage
+System.out.println( "H e llo! Buyer - agent "+getAID().getName()+ " is ready." ;
+}
+}
